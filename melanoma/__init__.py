@@ -29,7 +29,12 @@ def predict():
 
     #Feature Extraction
     f = FeatureExtractor()
-    f.get_features(img_lesion)
+    features = f.get_features(img_lesion)
+    for i in features:
+        print i
+
+    #Train Model
+
 
     #Send back response in JSON
     return 'Melanoma prediction started'

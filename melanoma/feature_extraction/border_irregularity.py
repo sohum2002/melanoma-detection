@@ -43,4 +43,6 @@ def get_border_edge_abruptness(img, show = False):
 
     edge_score /= (img_perimeter * (mean_dist**2))
 
-    edge_score
+    print edge_score
+
+    return edge_score
