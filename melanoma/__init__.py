@@ -4,7 +4,9 @@ from scipy import ndimage
 from scipy.misc import imread, imsave
 import skimage
 from skimage import color, filter
-
+from preprocessing.preprocess import *
+from preprocessing.macwe import *
+from feature_extraction.feature_extractor import *
 app = Flask(__name__)
 
 @app.route('/')
@@ -19,12 +21,15 @@ def predict():
 
     #Preprocess
     p = Preprocessing()
-    preprocessed_img = p.preprocessImage(img)
+    preprocessed_img, start = p.preprocess_img(img)
 
     #Extract lesion from image
-    img_lesion = extract_lesion(preprocessed_img)
+    img_lesion = extract_lesion(preprocessed_img, start)
+    imsave(app.root_path + "/img/processed/" + img_url, img_lesion)
 
-    #Run in predict
+    #Feature Extraction
+    f = FeatureExtractor()
+    f.get_features(img_lesion)
 
     #Send back response in JSON
     return 'Melanoma prediction started'

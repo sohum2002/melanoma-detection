@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import ndimage
+from itertools import cycle
 from scipy.ndimage import binary_dilation, binary_erosion, \
                         gaussian_filter, gaussian_gradient_magnitude
 class fcycle(object):
@@ -263,11 +264,13 @@ def circle_levelset(shape, center, sqradius,scalerow=1.0):
     u = np.float_(phi > 0)
     return u
 
-def extract_lesion(img):
+def extract_lesion(img, start):
     macwe = MorphACWE(img, smoothing=4, lambda1=1, lambda2=1)
     macwe.levelset = circle_levelset(img.shape, (100, 170), 50)
     end_snake = evolve(macwe, num_iters=150, background=img)
+
     bool_end = end_snake.astype(bool)
     curr_bool = np.invert(bool_end)
-    img[curr_bool] = 255
-    img
+    start[curr_bool] = 255
+    print "[PRE-PROCESSING] Separated lesion from image"
+    return start
