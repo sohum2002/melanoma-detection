@@ -7,6 +7,9 @@ from skimage import color, filter
 from preprocessing.preprocess import *
 from preprocessing.macwe import *
 from feature_extraction.feature_extractor import *
+from ml.prediction_model import *
+from flask import json
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -30,11 +33,17 @@ def predict():
     #Feature Extraction
     f = FeatureExtractor()
     features = f.get_features(img_lesion)
-    for i in features:
-        print i
 
-    #Train Model
-
+    #Call trained model
+    prediction_prob = predict_input(features)
 
     #Send back response in JSON
-    return 'Melanoma prediction started'
+    json_str = {}
+    json_str['probability_false'] = prediction_prob[0][0]
+    json_str['probability_true'] = prediction_prob[0][1]
+    response = app.response_class(
+        response = json.dumps(json_str),
+        status = 200,
+        mimetype='application/json'
+    )
+    return response

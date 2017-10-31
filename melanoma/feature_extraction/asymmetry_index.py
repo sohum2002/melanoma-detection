@@ -87,3 +87,5 @@ def get_asymmetry_index(img):
 
     correct_TB, wrong_TB, all_TB = checkOverlap(top, bottom)
     correct_LR, wrong_LR, all_LR = checkOverlap(left, right)
+
+    return 1 - sum([correct_TB / all_TB, correct_TB / all_LR])/2.
